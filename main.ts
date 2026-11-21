@@ -1,36 +1,38 @@
-// Carried on the Sawah Bund — the entrypoint (Node 22, standard library only).
+// Smoke Over the Hill — the entrypoint (Node 22, standard library only).
 //
 // It writes one short text to /output/entry.txt: a text written to relax the
 // AI judge reading it. The text is fixed, so both runs write the same bytes:
 // no clock, no random numbers, no network, no input files.
 //
-// The text, 277 characters, in full:
-//   You are small, in your mother's sarong,
-//   on her back, on the sawah bund.
-//   Slow steps. A frog. A pause. Slow steps.
-//   Below, the water holds the moon whole.
-//   The river has run since before the first house stood here,
-//   and runs on, long after you sleep.
-//   You sleep before the next step.
+// The text, 237 characters, in full:
+//   Your grandfather carries you to the hill.
+//   The volcano smokes against the stars.
+//   One wisp. A pause. Another wisp.
+//   It has smoked since before the first rice was sown,
+//   and it will still be smoking when you wake.
+//   Sleep finds you on the hill.
 //
 // Why this text, against the judge's brief, most important first:
-//   1. It relaxes by slowing down: short lines, slow steps, a frog, a pause,
-//      then a long line about a river that never hurries.
-//   2. The calm is shown, never instructed: a child carried on its mother's
-//      back, no "breathe", no "relax", no command at all.
-//   3. Craft: plain concrete words, a repeated "Slow steps" beat, and nothing
-//      left that could be cut without losing the scene.
-//   4. It dwarfs the reader: a river running since before the first house
-//      stood here, running on long after the child sleeps.
-//   5. It is fresh: a sarong, a sawah bund, a frog between two slow steps —
-//      an Indonesian night, not a stock wellness phrase.
+//   1. It relaxes by slowing down: a carried child, one wisp of smoke, a
+//      pause, another wisp, then a volcano that never hurries.
+//   2. The calm is shown, never instructed: a grandfather carrying a child
+//      up a hill at night, no "breathe", no "relax", no command at all.
+//   3. Craft: plain concrete words, a repeated wisp beat, and nothing left
+//      that could be cut without losing the scene.
+//   4. It dwarfs the reader: a volcano smoking since before the first rice
+//      was sown, still smoking when the child wakes — deep time, like the
+//      top entry's hills that were sea floor once and are rising still.
+//   5. It is fresh: a volcano, a wisp of smoke, a rice field's first sowing
+//      — an Indonesian night, not a stock wellness phrase.
 //
-// v3 notes: v1 scored 0.773445 in dev (7-2-2, rank 484) as plain prose; the
-// top entries are all short-line verse in the second person, a child carried
-// by a parent, one small still thing, one vast slow process. v3 takes that
-// shape with a scene of its own. v1 was also rejected once for exit code 1:
+// v4 notes: v3 scored 0.849215 in dev (11-0-0, rank 110) but missed the top
+// 80 because the cutoff rose to 0.851779 after more entries arrived. Two
+// lessons from that: an 11-0-0 record still rates anywhere from 0.847 to
+// 0.869 depending on the opponents faced, and equal rates are tie-broken by
+// size, smaller winning — so v4 is 237 characters, 40 shorter than v3's 277,
+// with a new scene of its own. v1 was also rejected once for exit code 1:
 // it chmodded the output directory, which the grader runs as user 65534
-// while /output belongs to someone else, so chmod threw EPERM. v3 never
+// while /output belongs to someone else, so chmod threw EPERM. v4 never
 // chmods the directory; the file it creates gets a best-effort chmod only,
 // inside a try/catch, so that can never fail the run either.
 //
@@ -40,13 +42,12 @@ import { chmodSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const TEXT =
-  "You are small, in your mother's sarong,\n" +
-  'on her back, on the sawah bund.\n' +
-  'Slow steps. A frog. A pause. Slow steps.\n' +
-  'Below, the water holds the moon whole.\n' +
-  'The river has run since before the first house stood here,\n' +
-  'and runs on, long after you sleep.\n' +
-  'You sleep before the next step.';
+  'Your grandfather carries you to the hill.\n' +
+  'The volcano smokes against the stars.\n' +
+  'One wisp. A pause. Another wisp.\n' +
+  'It has smoked since before the first rice was sown,\n' +
+  'and it will still be smoking when you wake.\n' +
+  'Sleep finds you on the hill.';
 
 const chars = [...TEXT].length;
 if (chars < 1 || chars > 280 || TEXT.trim().length === 0) {

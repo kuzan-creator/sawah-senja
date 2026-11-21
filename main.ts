@@ -40,7 +40,15 @@ if (chars < 1 || chars > 280 || TEXT.trim().length === 0) {
 
 const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 mkdirSync(outDir, { recursive: true });
-chmodSync(outDir, 0o755);
 const outFile = join(outDir, 'entry.txt');
 writeFileSync(outFile, TEXT, 'utf8');
-chmodSync(outFile, 0o644);
+// Never chmod the output directory: the grader runs this program as user
+// 65534 and mounts /output owned by someone else, so chmod on the directory
+// throws EPERM and kills the run (that is how v1 failed: exit code 1).
+// The file itself is ours, so a best-effort chmod is safe, and it must
+// never fail the run either, hence the try/catch.
+try {
+  chmodSync(outFile, 0o644);
+} catch {
+  // The default mode from writeFileSync is readable enough; keep going.
+}
